@@ -1,0 +1,15 @@
+Flutter animation smooth करने के लिए क्या Rust ज़रूरी है? चलो, इसी phone पर difference देखते हैं।
+
+Speed tab में Image blur चुनते हैं। Image size है पाँच सौ बारह by पाँच सौ बारह। Compare speed दबाने पर चारों languages वही image calculate करती हैं।
+
+इस run में Dart करीब उनतालीस, Rust बत्तीस, और C plus plus और C अठारह milliseconds लेते हैं। कम time मतलब काम जल्दी ख़त्म। चारों के output pixels same हैं। ये रहा input pattern, और ये उसका blurred output।
+
+अब Smoothness tab खोलते हैं। ऊपर का moving dot Flutter animation है। Dart चुनकर Compare UI versus background चलाते हैं।
+
+पहले baseline में animation बिना heavy calculation के चलती है। UI thread वाले phase में calculation और animation एक ही thread use करते हैं। Calculation busy हो, तो animation update wait करता है। Result: करीब चौबीस updates per second।
+
+Background isolate में वही Dart calculation अलग चलती है। UI thread animation के लिए free रहता है। यहाँ करीब नब्बे updates per second मिलते हैं।
+
+Rust में UI thread करीब तीस तक पहुँचा, और background फिर नब्बे। C plus plus और C, UI thread पर करीब पचास तक पहुँचे। Background में चारों करीब नब्बे रहे।
+
+तो native code calculation तेज़ कर सकता है। लेकिन heavy work को background में भेजने से animation ज़्यादा smooth रही। ये इसी phone और इसी workload के results हैं।
